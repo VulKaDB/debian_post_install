@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# ==============================================================================
+# TITRE : Setup Debian 13
+# DESCRIPTION : Mises à jour, BinUtils, Samba/Netbios, Bashrc, Webmin, MiniJeux
+# ==============================================================================
+
+#===============================================================================
+# 1. Sécurité : Arrêt du script en cas d'erreur
+#===============================================================================
+
+set -e
+
+if [ "$EUID" -ne 0 ]; then
+  echo "Ce script doit être lancé en tant que root."
+  exit 1
+fi
+
+# ==============================================================================
+# 2. MISE À JOUR
+# ==============================================================================
+
+echo "Mise à Jour du système en cours..."
+apt update && apt upgrade -y
+
+# ==============================================================================
+# 3. INSTALLATIONS DES PAQUETS
+# ==============================================================================
+
+echo "Installation des BinUtils..."
+apt install ssh zip nmap locate ncdu curl git screen dnsutils net-tools sudo lynx -y
+
+echo "Installation des paquets Samba/Netbios..."
+apt install winbind samba -y
+
+echo "Installation des BSDGAMES..."
+apt install bsdgames -y
+
+# ==============================================================================
+# 4. CONFIGURATION SYSTÈME & FICHIERS
+# ==============================================================================
+
+echo "Mise à jour de l'index locate..."
+updatedb
+
+echo "Ajout de WINS dans nsswitch.conf..."
+sed -i 's/^hosts: .*/hosts:          files dns wins/' /etc/nsswitch.conf
+
+echo "Activation des options dans le .bashrc..."
+cat << AJOUT >> /root/.bashrc
+export LS_OPTIONS='--color=auto'
+eval "$(dircolors)"
+alias ls='ls \$LS_OPTIONS'
+alias ll='ls \$LS_OPTIONS -l'
+alias l='ls \$LS_OPTIONS -lA'
+AJOUT
+
+
+# ==============================================================================
+# 5. INSTALLATION WEBMIN
+# ==============================================================================
+
+echo "Installation de Webmin..."
+
+curl -o webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+
+sh webmin-setup-repo.sh --force
+
+apt install webmin -y --install-recommends
+
+rm webmin-setup-repo.sh
+
+# ==============================================================================
+# 6. FIN
+# ==============================================================================
+
+echo "======================================================="
+echo "L'installation est finie."
+echo "======================================================="
+echo "Infos :"
+echo "   - Ton IP actuelle (DHCP) est :"
+hostname -I
+echo "- Webmin accessible via : https://TON_IP:10000"
+echo "- Jeux disponibles dans /usr/games"
