@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-# TITRE : Setup Debian 13
+# TITRE : Setup post install de Debian 13
 # DESCRIPTION : Mises à jour, BinUtils, Samba/Netbios, Bashrc, Webmin, MiniJeux
 # ==============================================================================
 
