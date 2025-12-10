@@ -55,7 +55,6 @@ alias ll='ls \$LS_OPTIONS -l'
 alias l='ls \$LS_OPTIONS -lA'
 AJOUT
 
-
 # ==============================================================================
 # 5. INSTALLATION WEBMIN
 # ==============================================================================
@@ -74,12 +73,11 @@ rm webmin-setup-repo.sh
 # 6. FIN
 # ==============================================================================
 
-echo "======================================================="
-echo "L'installation est finie."
-echo "======================================================="
+#=======================================================
+# 6. L'installation est Finie !"
+#=======================================================
 echo "Infos :"
 echo "   - Ton IP actuelle (DHCP) est :"
            hostname -I
-
 echo "   - Webmin accessible via : https://TON_IP:10000"
 echo "   - Jeux disponibles dans /usr/games"
