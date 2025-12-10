@@ -1,3 +1,99 @@
-#! /bin/bash
+#!/bin/bash
 
-echo test
+# ==============================================================================
+# TITRE : Script Setup Debian 13 (Version Safe - Pas de config IP)
+# DESCRIPTION : Mises à jour, Outils, Netbios, Bashrc, Webmin, Jeux
+# ==============================================================================
+
+# 1. Sécurité : Arrêt immédiat en cas d'erreur
+set -e
+
+# Vérification root
+if [ "$EUID" -ne 0 ]; then
+  echo "❌ Erreur : Ce script doit être lancé en root (ou avec sudo)."
+  exit 1
+fi
+
+# ==============================================================================
+# 2. DÉFINITION DES VARIABLES
+# ==============================================================================
+# Liste des paquets à installer
+PAQUETS_BASE="ssh zip unzip nmap locate ncdu curl git screen dnsutils net-tools sudo lynx"
+PAQUETS_SAMBA="winbind samba"
+PAQUETS_FUN="bsdgames"
+
+echo "🚀 Démarrage du script d'installation..."
+
+# ==============================================================================
+# 3. MISE À JOUR ET INSTALLATIONS
+# ==============================================================================
+echo "🔄 [1/5] Mise à jour du système..."
+# On met à jour la liste et on installe les patchs
+apt update && apt upgrade -y
+
+echo "📦 [2/5] Installation des paquets de base..."
+apt install -y $PAQUETS_BASE
+
+echo "📦 Installation des composants Samba/Netbios..."
+apt install -y $PAQUETS_SAMBA
+
+echo "🎮 Installation du Bonus Fun..."
+apt install -y $PAQUETS_FUN
+
+# ==============================================================================
+# 4. CONFIGURATION SYSTÈME & FICHIERS
+# ==============================================================================
+echo "⚙️ [3/5] Configuration des fichiers systèmes..."
+
+# 4.1 Locate (Indexation des fichiers)
+echo "   -> Mise à jour de l'index locate..."
+updatedb
+
+# 4.2 Netbios (nsswitch.conf)
+# On vérifie si 'wins' est déjà présent pour ne pas le mettre deux fois
+if ! grep -q "wins" /etc/nsswitch.conf; then
+    # Commande sed pour ajouter 'wins' à la fin de la ligne hosts
+    sed -i '/^hosts:/ s/$/ wins/' /etc/nsswitch.conf
+    echo "   -> WINS ajouté à nsswitch.conf."
+else
+    echo "   -> WINS était déjà configuré."
+fi
+
+# 4.3 Personnalisation du BASH (.bashrc)
+# On active la couleur et les alias en décommentant les lignes 9 à 13
+echo "   -> Activation des couleurs dans le .bashrc..."
+sed -i '9,13s/^#//' /root/.bashrc
+
+# ==============================================================================
+# 5. INSTALLATION WEBMIN
+# ==============================================================================
+echo "🔧 [4/5] Installation de Webmin..."
+
+# Téléchargement du script d'installation officiel
+curl -o webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+
+# Exécution du script de repo (ajout des clés de sécurité Webmin)
+sh webmin-setup-repo.sh --force
+
+# Installation du paquet final
+apt install -y webmin --install-recommends
+
+# Nettoyage du fichier temporaire
+rm webmin-setup-repo.sh
+
+# ==============================================================================
+# 6. FIN
+# ==============================================================================
+echo "======================================================="
+echo "✅ TERMINÉ ! L'installation est finie."
+echo "======================================================="
+echo "ℹ️  Infos :"
+echo "   - Ton IP actuelle (DHCP) est :"
+# On affiche l'IP pour que tu saches où te connecter
+ip -4 a | grep inet | grep -v "127.0.0.1" | awk '{print $2}'
+echo ""
+echo "   - Webmin accessible via : https://TON_IP:10000"
+echo "   - Jeux disponibles dans /usr/games"
+echo ""
+echo "💡 Astuce : Pour prendre en compte le changement du .bashrc,"
+echo "   déconnecte-toi et reconnecte-toi (ou tape : source ~/.bashrc)"
