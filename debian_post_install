@@ -5,26 +5,15 @@
 # DESCRIPTION : Mises à jour, BinUtils, Samba/Netbios, Bashrc, Webmin, MiniJeux
 # ==============================================================================
 
-#===============================================================================
-# 1. Sécurité : Arrêt du script en cas d'erreur
-#===============================================================================
-
-set -e
-
-if [ "$EUID" -ne 0 ]; then
-  echo "Ce script doit être lancé en tant que root."
-  exit 1
-fi
-
 # ==============================================================================
-# 2. MISE À JOUR
+# 1. MISE À JOUR
 # ==============================================================================
 
 echo "Mise à Jour du système en cours..."
 apt update && apt upgrade -y
 
 # ==============================================================================
-# 3. INSTALLATIONS DES PAQUETS
+# 2. INSTALLATIONS DES PAQUETS
 # ==============================================================================
 
 echo "Installation des BinUtils..."
@@ -37,7 +26,7 @@ echo "Installation des BSDGAMES..."
 apt install bsdgames -y
 
 # ==============================================================================
-# 4. CONFIGURATION SYSTÈME & FICHIERS
+# 3. CONFIGURATION SYSTÈME & FICHIERS
 # ==============================================================================
 
 echo "Mise à jour de l'index locate..."
@@ -56,7 +45,7 @@ alias l='ls \$LS_OPTIONS -lA'
 AJOUT
 
 # ==============================================================================
-# 5. INSTALLATION WEBMIN
+# 4. INSTALLATION WEBMIN
 # ==============================================================================
 
 echo "Installation de Webmin..."
@@ -68,10 +57,6 @@ sh webmin-setup-repo.sh --force
 apt install webmin -y --install-recommends
 
 rm webmin-setup-repo.sh
-
-# ==============================================================================
-# 6. FIN
-# ==============================================================================
 
 echo "======================================================="
 echo "L'installation est Finie !"
