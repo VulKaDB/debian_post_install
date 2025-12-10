@@ -9,7 +9,7 @@ Ce script Bash automatise la configuration initiale d'un serveur Debian 13 fraî
 * Une machine sous **Debian 13**.
 * Être connecté en tant que **root** (ou avoir les droits sudo).
 * Une connexion Internet active.
-* Rendre le script executable avec chmod +x install.sh
+* Rendre le script executable avec chmod +x debian_post_install.sh
 
 ## Fonctionnalités
 
