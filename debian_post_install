@@ -79,6 +79,7 @@ echo "L'installation est finie."
 echo "======================================================="
 echo "Infos :"
 echo "   - Ton IP actuelle (DHCP) est :"
-hostname -I
-echo "- Webmin accessible via : https://TON_IP:10000"
-echo "- Jeux disponibles dans /usr/games"
+           hostname -I
+
+echo "   - Webmin accessible via : https://TON_IP:10000"
+echo "   - Jeux disponibles dans /usr/games"
