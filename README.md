@@ -22,5 +22,5 @@ Le script effectue les actions suivantes de manière séquentielle :
     * Utilitaire : `zip`, `unzip`, `ncdu`, `locate`.
 3.  **Support Netbios/Samba** : Installation et configuration automatique du fichier `/etc/nsswitch.conf` (ajout de WINS).
 4.  **Confort du terminal** : Activation des couleurs et alias dans le `.bashrc`.
-5.  **Installation de Webmin** : Interface de gestion web du serveur (via le dépôt officiel).
-6.  **Bonus** : Installation des jeux BSD (`bsdgames`).
+5.  **Installation de Webmin** : Interface de gestion web de la VM.
+6.  **Bonus** : Installation des minijeux bsdgames.
