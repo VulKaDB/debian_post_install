@@ -10,6 +10,8 @@ Ce script Bash automatise la configuration initiale d'un serveur Debian 13 fraî
 * Être connecté en tant que **root** (ou avoir les droits sudo).
 * Une connexion Internet active.
 * Rendre le script executable avec chmod +x debian_post_install.sh
+
+  ## Executer le Script
 * **wget** https://raw.githubusercontent.com/VulKaDB/debian_post_install/refs/heads/main/debian_post_install
 
 ## Fonctionnalités
