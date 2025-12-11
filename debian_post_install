@@ -32,8 +32,26 @@ apt install bsdgames -y
 echo "Mise à jour de l'index locate..."
 updatedb
 
+echo"Création de nsswitch.conf.bak"
+cp /etc/nsswitch.conf /etc/nsswitch.conf.bak
+
 echo "Ajout de WINS dans nsswitch.conf..."
-sed -i 's/^hosts: .*/hosts:          files dns wins/' /etc/nsswitch.conf
+cat << REMPLACER > /etc/nsswitch.conf
+passwd:         files systemd winbind
+group:          files systemd winbind
+shadow:         files systemd
+gshadow:        files systemd
+
+hosts:          files dns wins
+networks:       files
+
+protocols:      db files
+services:       db files
+ethers:         db files
+rpc:            db files
+
+netgroup:       nis
+REMPLACER
 
 echo "Activation des options dans le .bashrc..."
 cat << AJOUT >> /root/.bashrc
@@ -64,9 +82,9 @@ rm webmin-setup-repo.sh
 
 rm debian_post_install
 
-echo "======================================================="
+echo "=========================================================================="
 echo "L'installation est Finie !"
-echo "======================================================="
+echo "=========================================================================="
 echo "Infos :"
 echo "   - Ton IP actuelle (DHCP) est :"
 hostname -I
