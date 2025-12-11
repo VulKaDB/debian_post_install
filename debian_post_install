@@ -62,7 +62,7 @@ rm webmin-setup-repo.sh
 # 5. SUPPRESSION .SH
 # ==============================================================================
 
-rm debian_post_install.sh
+rm debian_post_install
 
 echo "======================================================="
 echo "L'installation est Finie !"
